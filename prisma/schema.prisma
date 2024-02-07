@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_APP_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  username  String    @unique
+  name      String
+  email     String    @unique
+  password  String
+  groupId   String
+  group     UserGroup @relation(fields: [groupId], references: [id])
+  status    Status    @default(DISABLED)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+enum Status {
+  ACTIVE
+  BLOCKING
+  DISABLED
+}
+
+model UserGroupAdminModule {
+  id        String      @id @default(uuid())
+  moduleId  String
+  module    AdminModule @relation(fields: [moduleId], references: [id])
+  groupId   String
+  group     UserGroup   @relation(fields: [groupId], references: [id])
+  create    Boolean     @default(false)
+  read      Boolean     @default(false)
+  update    Boolean     @default(false)
+  delete    Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime?   @updatedAt
+}
+
+model AdminModule {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  url       String    @unique
+  label     String
+  icon      String
+  sort      Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  userGroupAdminModule UserGroupAdminModule[]
+}
+
+model UserGroup {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  User                 User[]
+  userGroupAdminModule UserGroupAdminModule[]
+}
+
+model KodeReg {
+  id        String   @id @default(uuid())
+  kode      String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Pekerjaan Pekerjaan[]
+}
+
+model Pekerjaan {
+  id         String   @id @default(uuid())
+  koderegId  String
+  kodereg    KodeReg  @relation(fields: [koderegId], references: [id])
+  rek        String
+  uraian     String
+  fisik      String
+  norma      String
+  rotasi     String
+  keterangan String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  LuasTbm LuasTbm[]
+}
+
+model Itensitas {
+  id        String   @id @default(uuid())
+  rata      String
+  jurangan  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LuasTbm {
+  id          String    @id @default(uuid())
+  pekerjaanId String
+  pekerjaan   Pekerjaan @relation(fields: [pekerjaanId], references: [id])
+  caturwulan  String
+  bulan       String
+  minggu      String
+  jenis       String
+  keterangan  String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
