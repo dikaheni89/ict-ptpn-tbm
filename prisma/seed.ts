@@ -115,6 +115,20 @@ async function userGroupAdminModules() {
           delete: true
         },
         {
+          name: 'Kode Rekening',
+          create: true,
+          read: true,
+          update: true,
+          delete: true
+        },
+        {
+          name: 'Uraian Pekerjaan',
+          create: true,
+          read: true,
+          update: true,
+          delete: true
+        },
+        {
           name: 'Standar Fisik',
           create: true,
           read: true,
