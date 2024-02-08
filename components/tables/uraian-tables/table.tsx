@@ -6,12 +6,12 @@ import qs from "qs";
 import { UUID } from "crypto";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import moment from "moment-timezone";
 import DataTable from "@/lib/components/datatable";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
 
@@ -43,39 +43,52 @@ type TableProps = {
 
 const generateColumns = (props: GenerateColumnsProps) => ([
     {
-        header: 'Nama',
-        accessorKey: 'name',
-        cell: (data: any) => <p>{data.getValue()}</p>
+      header: 'Kode Rekening',
+      accessorKey: 'kodereg',
+      cell: (data: any) => {
+        const kodereg = data.row.original.kodereg;
+        const rek = data.row.original.rek;
+        return <p>{`${kodereg}.${rek}`}</p>;
+      }
     },
     {
-        header: 'Email',
-        accessorKey: 'email',
-        cell: (data: any) => <p>{data.getValue()}</p>
+      header: 'Uraian Pekerjaan',
+      accessorKey: 'uraian',
+      cell: (data: any) => <p>{data.getValue()}</p>
     },
     {
-        header: 'Group',
-        accessorKey: 'group',
-        cell: (data: any) => <p>{data.getValue()}</p>,
-        enableSorting: false
+      header: 'Fisik',
+      accessorKey: 'fisik',
+      cell: (data: any) => <p>{data.getValue()}</p>,
+      enableSorting: false
     },
     {
-        header: 'Tanggal Dibuat',
-        accessorKey: 'createdAt',
-        cell: (data: any) => (
-            <p>
-                {moment(data.getValue()).tz('Asia/Jakarta').format('DD/MM/YYYY HH:mm') + " WIB"}
-            </p>
-        )
+      header: 'Norma',
+      accessorKey: 'norma',
+      cell: (data: any) => <p>{data.getValue()}</p>,
+      enableSorting: false
     },
     {
-        header: '',
-        accessorKey: 'id',
-        cell: (data: any) => (
-            <ContextMenu id={data.getValue()} onDeleted={props.onDeleteData} permission={props.permission} />
-        ),
-        enableSorting: false
+      header: 'Rotasi',
+      accessorKey: 'rotasi',
+      cell: (data: any) => <p>{data.getValue()}</p>,
+      enableSorting: false
+    },
+    {
+      header: 'Keterangan',
+      accessorKey: 'keterangan',
+      cell: (data: any) => <p>{data.getValue()}</p>,
+      enableSorting: false
+    },
+    {
+      header: '',
+      accessorKey: 'id',
+      cell: (data: any) => (
+        <ContextMenu id={data.getValue()} onDeleted={props.onDeleteData} permission={props.permission} />
+      ),
+      enableSorting: false
     }
-]);
+  ]);
 
 function ContextMenu({ id, onDeleted, permission }: ContextMenuProps): React.JSX.Element {
     if (!permission.update && !permission.delete && !permission.read) return <></>;
@@ -91,7 +104,7 @@ function ContextMenu({ id, onDeleted, permission }: ContextMenuProps): React.JSX
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <Link
-                    href={`/dashboard/user/edit/${id}`}
+                    href={`/dashboard/uraian/edit/${id}`}
                 >
                     <DropdownMenuItem>
                             <Edit className="mr-2 h-4 w-4" /> Update
@@ -119,6 +132,7 @@ async function deleteData(id: UUID, onDeleted?: () => void) {
     });
 
     if (!isConfirmed) return;
+    
 
     confirm.fire({
         title: 'Mohon Tunggu',
@@ -132,7 +146,7 @@ async function deleteData(id: UUID, onDeleted?: () => void) {
         allowEnterKey: false
     })
 
-    const response_api = await fetch(`/api/user?userId=${id}`, {
+    const response_api = await fetch(`/api/uraian?pekerjaanId=${id}`, {
         method: 'DELETE'
     });
 
@@ -184,7 +198,7 @@ export default function Table(props: TableProps) {
         }
     ] : [
         {
-            id: 'name',
+            id: 'uraian',
             desc: true
         }
     ];
@@ -211,7 +225,7 @@ export default function Table(props: TableProps) {
         }
 
         let filterUrl = qs.stringify(filter)
-        let url = filterUrl ? new URL(`${window.location.origin}/api/user?${filterUrl}`) : new URL(`${window.location.origin}/api/user`)
+        let url = filterUrl ? new URL(`${window.location.origin}/api/uraian?${filterUrl}`) : new URL(`${window.location.origin}/api/uraian`)
         router.replace(`${pathname}?${pageParams.toString()}`)
 
         let pendingRender = setTimeout(() => {
@@ -241,8 +255,9 @@ export default function Table(props: TableProps) {
 
     return (
         <>
+            <Separator />
             <Input
-                placeholder={`Cari Nama Lengkap, Email, Group..`}
+                placeholder={`Cari Uraian Pekerjaan, Fisik Pekerjaan, Kode Rekening..`}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="max-w-sm"

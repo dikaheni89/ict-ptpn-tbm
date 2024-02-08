@@ -1,21 +1,14 @@
 "use client"
 
 import * as React from "react"
-
-import { Progress } from "@/components/ui/progress"
+import Loader from "../public/static/loader/loader.gif"
+import Image from 'next/image';
 
 export default function Loading() {
-  const [progress, setProgress] = React.useState(13)
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => setProgress(100), 500)
-    return () => clearTimeout(timer)
-  }, [])
-
   return (
     <>
       <div className="relative top-52 flex justify-center">
-        <Progress value={progress} className="w-[60%] bg-green-950" />
+        <Image src={Loader} alt="logo" width={100} height={100} />
       </div>
     </>
   )

@@ -6,7 +6,6 @@ import qs from "qs";
 import { UUID } from "crypto";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import moment from "moment-timezone";
 import DataTable from "@/lib/components/datatable";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -136,7 +135,7 @@ async function deleteData(id: UUID, onDeleted?: () => void) {
 
   if (!isConfirmed) return;
 
-  await confirm.fire({
+  confirm.fire({
     title: 'Mohon Tunggu',
     text: 'Sedang Menghapus Data',
     didOpen: async () => {

@@ -4,10 +4,8 @@ import { getToken } from "next-auth/jwt";
 import { ICustomToken } from "@/lib/auth-options";
 import { ResponseData, ResponseMessage } from "@/lib/response-api";
 import { object, string } from "yup";
-import { Status } from "@prisma/client";
 import { errorWithKeys } from "@/lib/utilsHelper";
 import { prisma } from "@/lib/prisma";
-import { hash } from "@/lib/crypto";
 
 export async function POST(req: NextRequest) {
   try {

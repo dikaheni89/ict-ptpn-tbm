@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
 
@@ -43,20 +44,14 @@ type TableProps = {
 
 const generateColumns = (props: GenerateColumnsProps) => ([
     {
-        header: 'Nama',
+        header: 'Kode Rekening',
+        accessorKey: 'kode',
+        cell: (data: any) => <p>{data.getValue()}</p>
+    },
+    {
+        header: 'Nama ',
         accessorKey: 'name',
         cell: (data: any) => <p>{data.getValue()}</p>
-    },
-    {
-        header: 'Email',
-        accessorKey: 'email',
-        cell: (data: any) => <p>{data.getValue()}</p>
-    },
-    {
-        header: 'Group',
-        accessorKey: 'group',
-        cell: (data: any) => <p>{data.getValue()}</p>,
-        enableSorting: false
     },
     {
         header: 'Tanggal Dibuat',
@@ -91,7 +86,7 @@ function ContextMenu({ id, onDeleted, permission }: ContextMenuProps): React.JSX
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <Link
-                    href={`/dashboard/user/edit/${id}`}
+                    href={`/dashboard/rekening/edit/${id}`}
                 >
                     <DropdownMenuItem>
                             <Edit className="mr-2 h-4 w-4" /> Update
@@ -119,6 +114,7 @@ async function deleteData(id: UUID, onDeleted?: () => void) {
     });
 
     if (!isConfirmed) return;
+    
 
     confirm.fire({
         title: 'Mohon Tunggu',
@@ -132,7 +128,7 @@ async function deleteData(id: UUID, onDeleted?: () => void) {
         allowEnterKey: false
     })
 
-    const response_api = await fetch(`/api/user?userId=${id}`, {
+    const response_api = await fetch(`/api/rekening?rekeningId=${id}`, {
         method: 'DELETE'
     });
 
@@ -211,7 +207,7 @@ export default function Table(props: TableProps) {
         }
 
         let filterUrl = qs.stringify(filter)
-        let url = filterUrl ? new URL(`${window.location.origin}/api/user?${filterUrl}`) : new URL(`${window.location.origin}/api/user`)
+        let url = filterUrl ? new URL(`${window.location.origin}/api/rekening?${filterUrl}`) : new URL(`${window.location.origin}/api/rekening`)
         router.replace(`${pathname}?${pageParams.toString()}`)
 
         let pendingRender = setTimeout(() => {
@@ -241,8 +237,9 @@ export default function Table(props: TableProps) {
 
     return (
         <>
+            <Separator />
             <Input
-                placeholder={`Cari Nama Lengkap, Email, Group..`}
+                placeholder={`Cari Nama Rekening, Kode Rekening..`}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="max-w-sm"

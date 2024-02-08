@@ -6,10 +6,7 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import { number, object, string } from "yup";
 import { Prisma } from "@prisma/client";
-import moment from "moment-timezone";
 import PekerjaanWhereInput = Prisma.PekerjaanWhereInput;
-import PekerjaanUpdateInput = Prisma.PekerjaanUpdateInput;
-import PekerjaanUncheckedUpdateInput = Prisma.PekerjaanUncheckedUpdateInput;
 import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
